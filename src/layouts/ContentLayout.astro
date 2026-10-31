@@ -9,17 +9,20 @@ import { integ } from '@/site-config'
 interface Props {
   meta: SiteMeta
   highlightColor?: string
-  back?: string
+  back?: string | false
+  listing?: boolean
 }
 
-const { meta, highlightColor, back = '/', ...props } = Astro.props
+const { meta, highlightColor, back = '/', listing = false, ...props } = Astro.props
 ---
 
 <PageLayout {meta} {highlightColor} {...props}>
-  <Button title='Back' href={back} variant='back' />
+  {back && <Button title='Back' href={back} variant='back' />}
   {/* 顶部内容横跨正文与侧栏；未提供时不生成额外元素。 */}
   <slot name='top' />
-  <main class='mt-6 items-start gap-x-10 md:flex'>
+  <main class={listing ? 'mt-6 lg:mt-10' : 'mt-6 items-start gap-x-10 md:flex'}>
+    {/* 列表自带分类侧栏与排版，避免套入正文和目录样式。 */}
+    {listing ? <slot /> : <Fragment>
     {/* Sidebar */}
     <aside
       class='animate top-20 min-w-48 basis-60 overflow-y-scroll max-md:hidden z-40 fixed md:sticky md:order-2 lg:shrink-0 max-md:border max-md:px-4 max-md:py-3 max-md:bg-muted max-md:rounded-xl'
@@ -52,9 +55,10 @@ const { meta, highlightColor, back = '/', ...props } = Astro.props
         <slot />
       </div>
     </article>
+    </Fragment>}
   </main>
 
-  <div class='bottom mt-6 items-start gap-x-10 md:flex'>
+  {!listing && <div class='bottom mt-6 items-start gap-x-10 md:flex'>
     {/* Bottom */}
     <div class='flex-1 text-muted-foreground md:min-w-[50ch]'>
       <slot name='bottom' />
@@ -62,17 +66,17 @@ const { meta, highlightColor, back = '/', ...props } = Astro.props
     <div class='min-w-48 basis-60'>
       <slot name='bottom-sidebar' />
     </div>
-  </div>
+  </div>}
 
   <BackToTop header='content-header' content='content'>
-    <button
+    {!listing && <button
       slot='other-icons'
       aria-label='Toggle sidebar'
       class='size-10 flex items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground duration-300 hover:border-border/75 md:hidden sm:size-12'
       id='sidebar-btn'
     >
       <Icon name='list' />
-    </button>
+    </button>}
   </BackToTop>
 </PageLayout>
 

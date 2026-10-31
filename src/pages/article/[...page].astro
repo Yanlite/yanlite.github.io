@@ -2,11 +2,8 @@
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 
-import { Paginator } from 'astro-pure/components/pages'
-import PostPreview from '@/components/article/PostPreview.astro'
-import CategorySidebar from '@/components/category/CategorySidebar.astro'
-import { categoryCatalog } from '@/utils/category-catalog'
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import ArticleList from '@/components/article/ArticleList.astro'
+import { getArticleListing } from '@/utils/article-listing'
 import { Button } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import config from '@/site-config'
@@ -15,11 +12,7 @@ import { getArticleUrl } from '@/utils/articles'
 export const prerender = true
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const collections = sortMDByDate<'blog'>(await getBlogCollection('blog'))
-  const categoryCounts = categoryCatalog.getCounts(collections, {
-    includeDrafts: import.meta.env.DEV
-  })
-  const collectionsCount = collections.length
+  const { collections, categoryCounts, collectionsCount } = await getArticleListing()
   const pages = paginate(collections, {
     pageSize: config.content.blogPageSize,
     props: { categoryCounts, collectionsCount }
@@ -49,20 +42,7 @@ const meta = {
   title: '文章'
 }
 
-const paginationProps = {
-  ...(page.url.prev && {
-    prevUrl: {
-      text: `← Previous Posts`,
-      url: page.url.prev
-    }
-  }),
-  ...(page.url.next && {
-    nextUrl: {
-      text: `Next Posts →`,
-      url: page.url.next
-    }
-  })
-}
+
 ---
 
 <PageLayout {meta}>
@@ -71,33 +51,6 @@ const paginationProps = {
     <div id='content-header' class='animate'>
       <h1 class='mb-6 mt-6 text-3xl font-medium sm:mt-10'>文章</h1>
     </div>
-    {
-      page.data.length === 0 ? (
-        <p>No posts yet.</p>
-      ) : (
-        <div class='grid gap-y-6 sm:grid-cols-[minmax(0,3fr)_minmax(0,1fr)] sm:gap-x-8'>
-          <section aria-label='文章列表' class='animate' id='content'>
-            {/* header */}
-            <div class='mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row'>
-              <span class='text-muted-foreground'>
-                Page {page.currentPage} - Showing {page.data.length} of {collectionsCount} posts
-              </span>
-              <a aria-label='View all blog by years' href='/archives' data-astro-prefetch>
-                View all posts by years →
-              </a>
-            </div>
-            {/* posts */}
-            <ul class='flex flex-col gap-y-4 text-start'>
-              {page.data.map((post) => (
-                <PostPreview {post} detailed />
-              ))}
-            </ul>
-            <Paginator {...paginationProps} />
-          </section>
-
-          <CategorySidebar counts={categoryCounts} />
-        </div>
-      )
-    }
+    <ArticleList {page} {categoryCounts} {collectionsCount} />
   </main>
 </PageLayout>

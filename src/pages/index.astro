@@ -1,198 +1,65 @@
 ---
-import { ARTICLE_ROOT } from '@/utils/articles'
-import { Image } from 'astro:assets'
-
-import { Quote } from 'astro-pure/advanced'
-import PostPreview from '@/components/article/PostPreview.astro'
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
-import { Button, Card, Icon, Label } from 'astro-pure/user'
-import PageLayout from '@/layouts/BaseLayout.astro'
-import ProjectCard from '@/components/home/ProjectCard.astro'
-import Section from '@/components/home/Section.astro'
-import SkillLayout from '@/components/home/SkillLayout.astro'
+import type { Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import ContentLayout from '@/layouts/ContentLayout.astro'
+import ArticleList from '@/components/article/ArticleList.astro'
 import config from '@/site-config'
+import { getArticleListing } from '@/utils/article-listing'
+import { ARTICLE_ROOT } from '@/utils/articles'
 
-const languages = ['Html', 'JavaScript', 'CSS', 'Shell']
-const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
-const backend = ['Vercel', 'Waline']
-
-const MAX_POSTS = 10
-const allPosts = await getBlogCollection()
-const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
-
-const imagePath = config.logo.src
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/*.{jpeg,jpg,png,gif,avif,webp}'
-)
-if (!images[imagePath])
-  throw new Error(
-    `"${imagePath}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif,avif,webp}"`
-  )
+const { collections, categoryCounts, collectionsCount } = await getArticleListing()
+const size = config.content.blogPageSize ?? 10
+const data = collections.slice(0, size)
+const lastPage = Math.max(1, Math.ceil(collectionsCount / size))
+// 首页作为文章第一页的入口，后续分页沿用 /article 的规范路径。
+const page: Page<CollectionEntry<'blog'>> = {
+  data,
+  start: 0,
+  end: data.length - 1,
+  size,
+  total: collectionsCount,
+  currentPage: 1,
+  lastPage,
+  url: {
+    current: '/',
+    next: lastPage > 1 ? `${ARTICLE_ROOT}/2` : undefined,
+    prev: undefined,
+    first: undefined,
+    last: lastPage > 1 ? `${ARTICLE_ROOT}/${lastPage}` : undefined
+  }
+}
+const title = config.title
+const description = config.description
 ---
 
-<PageLayout meta={{ title: 'Home' }} highlightColor='#659EB9'>
-  <main class='flex w-full flex-col items-center'>
-    <section class='animate mb-10 flex flex-col items-center gap-y-7' id='content-header'>
-      <Image
-        src={images[imagePath]()}
-        alt={config.logo.alt || 'Profile'}
-        class='h-28 w-auto rounded-full border p-1'
-        loading='eager'
-        fetchpriority='high'
-      />
+<ContentLayout meta={{ title: '首页', description }} listing back={false}>
+  <section slot='top' class='home-header animate' id='content-header'>
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </section>
+  <ArticleList {page} {categoryCounts} {collectionsCount} />
+</ContentLayout>
 
-      <div class='flex flex-col items-center gap-y-4'>
-        <h1 class='text-3xl font-medium'>{config.author}</h1>
-        <div class='flex flex-wrap justify-center gap-x-7 gap-y-3'>
-          <Label title='Somewhere'>
-            <Icon name='location' class='size-5' slot='icon' />
-          </Label>
-          <Label
-            title='Source code'
-            as='a'
-            href='https://github.com/cworld1/astro-theme-pure'
-            target='_blank'
-          >
-            <Icon name='github' class='size-5' slot='icon' />
-          </Label>
-        </div>
-      </div>
+<style>
+  .home-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 3rem 2rem;
+    text-align: center;
+  }
 
-      {/* Get template */}
-      <a
-        href='https://github.com/cworld1/astro-theme-pure'
-        target='_blank'
-        class='flex flex-row items-center gap-x-3 rounded-full border bg-background px-4 py-2 text-sm shadow-sm transition-shadow hover:shadow-md'
-      >
-        <span class='relative flex items-center justify-center'>
-          <span
-            class='absolute size-2 animate-ping rounded-full border border-green-400 bg-green-400 opacity-75'
-          ></span>
-          <span class='size-2 rounded-full bg-green-400'></span>
-        </span>
-        <p class='font-medium text-muted-foreground'>Get Template</p>
-      </a>
-    </section>
+  .home-header h1 {
+    font-size: 2.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
 
-    <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
-      <Section title='About'>
-        <p class='text-muted-foreground'>Developer / Designer</p>
-        <p class='text-muted-foreground'>
-          Lorem ipsum dolor sit amet, vidit suscipit at mei. Quem denique mea id. Usu ei regione
-          indoctum dissentiunt, cu meliore fuisset mei, vel quod voluptua ne. Ex dicat impedit mel,
-          at eum oratio possit voluptatum.
-        </p>
-        <Button title='More about me' class='w-fit self-end' href='/about' variant='ahead' />
-      </Section>
-      {
-        allPostsByDate.length > 0 && (
-          <Section title='Posts'>
-            <ul class='flex flex-col gap-y-1.5 sm:gap-y-2'>
-              {allPostsByDate.map((p) => (
-                <li class='flex flex-col gap-x-2 sm:flex-row'>
-                  <PostPreview post={p} />
-                </li>
-              ))}
-            </ul>
-            <Button title='More posts' class='w-fit self-end' href={ARTICLE_ROOT} variant='ahead' />
-          </Section>
-        )
-      }
-
-      {
-        /* <Section title='Experience'>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      >
-        <ul class='ms-4 list-disc text-muted-foreground'>
-          <li>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore debitis recusandae, ut
-            molestiae laboriosam pariatur!
-
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, pariatur!</li>
-          </li>
-        </ul>
-      </Card>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      />
-    </Section> */
-      }
-      <Section title='Education'>
-        <Card
-          as='a'
-          heading='Lorem ipsum'
-          subheading='Lorem ipsum dolor sit amet, vidit suscipit at mei.'
-          date='August 2021 - July 2025'
-          href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        >
-          {
-            /* <ul class='ms-4 list-disc text-muted-foreground'>
-          <li>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore debitis recusandae, ut
-            molestiae laboriosam pariatur!
-          </li>
-          <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, pariatur!</li>
-        </ul> */
-          }
-        </Card>
-      </Section>
-
-      <Section title='Website List'>
-        <div class='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-          <ProjectCard
-            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-            heading='Lorem ipsum'
-            subheading='Do not go gentle into that good night'
-            imagePath='/src/assets/projects/1.avif'
-          />
-          <ProjectCard
-            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-            heading='Lorem ipsum'
-            subheading='Old age burn and rave at close of day'
-            imagePath='/src/assets/projects/2.avif'
-          />
-          <ProjectCard
-            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-            heading='Lorem ipsum'
-            subheading='Rage, rage against the dying of the light'
-            imagePath='/src/assets/projects/3.avif'
-          />
-          <ProjectCard
-            href='/projects'
-            heading='More projects'
-            subheading='Check out more projects'
-            imagePath='/src/assets/projects/4.avif'
-          />
-        </div>
-      </Section>
-
-      <Section title='Certifications'>
-        <Card
-          as='a'
-          heading='Lorem ipsum'
-          subheading='Lorem ipsum dolor sit amet, vidit suscipit at mei. Quem denique mea id. Usu ei regione indoctum dissentiunt, cu meliore fuisset mei, vel quod voluptua ne. Ex dicat impedit mel, at eum oratio possit voluptatum. Dicat ceteros cu vim. Impetus fuisset ullamcorper pri cu, his posse iisque ad, aliquam honestatis usu id.'
-          date='July 2024'
-          href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        />
-      </Section>
-
-      <Section title='Skills'>
-        <SkillLayout title='Languages' skills={languages} />
-        <SkillLayout title='Frontend' skills={frontend} />
-        <SkillLayout title='Backend' skills={backend} />
-      </Section>
-    </div>
-    <Quote class='mt-12' />
-  </main>
-</PageLayout>
+  .home-header p {
+    max-width: 42rem;
+    color: hsl(var(--muted-foreground));
+    overflow-wrap: anywhere;
+  }
+</style>
