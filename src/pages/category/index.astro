@@ -1,0 +1,28 @@
+---
+import CategoryTree from '@/components/category/CategoryTree.astro'
+import { categories } from '../../data/categories'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { ARTICLE_ROOT } from '@/utils/articles'
+import { categoryCatalog } from '@/utils/category-catalog'
+import { getBlogCollection } from 'astro-pure/server'
+import { Button } from 'astro-pure/user'
+
+const posts = await getBlogCollection('blog')
+const counts = categoryCatalog.getCounts(posts, { includeDrafts: import.meta.env.DEV })
+const meta = { title: '分类', description: '按分类浏览文章，父分类包含全部后代分类的文章。' }
+---
+
+<PageLayout {meta}>
+  <Button title='返回文章' href={ARTICLE_ROOT} variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-6 text-3xl font-medium'>分类</h1>
+      <p class='mb-4 text-sm text-muted-foreground'>点击箭头展开子分类，点击分类名称查看文章。</p>
+    </div>
+    <section id='content' class='animate' aria-label='分类列表'>
+      {categories.length > 0 ? (
+        <CategoryTree {categories} {counts} />
+      ) : <p>暂无分类。</p>}
+    </section>
+  </main>
+</PageLayout>

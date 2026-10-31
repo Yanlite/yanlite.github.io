@@ -2,8 +2,8 @@
 title: Markdown Syntax Support
 publishDate: 2023-07-26 08:00:00
 description: 'Markdown is a lightweight markup language.'
-tags:
-  - Markdown
+categories:
+  - markdown
 heroImage: { src: './thumbnail.jpg', color: '#B4C6DA' }
 language: 'English'
 ---

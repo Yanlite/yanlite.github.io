@@ -1,0 +1,34 @@
+---
+import { categories } from '../../data/categories'
+import { CATEGORY_ROOT } from '@/utils/category-links'
+import CategoryTree from './CategoryTree.astro'
+
+interface Props {
+  counts: Map<string, number>
+  currentId?: string
+}
+
+const { counts, currentId } = Astro.props
+---
+
+<aside id='sidebar' class='animate min-w-0 max-sm:order-first' aria-label='文章分类'>
+  {/* 两种布局共用分类树；CSS 确保只有当前尺寸对应的导航可见。 */}
+  <div class='hidden sm:block'>
+    <h2 class='mb-3 text-lg font-medium'>分类</h2>
+    <nav aria-label='分类导航'>
+      <CategoryTree {categories} {counts} {currentId} />
+    </nav>
+    <a href={CATEGORY_ROOT} class='mt-4 block text-sm hover:underline' data-astro-prefetch>
+      全部分类 →
+    </a>
+  </div>
+  <details class='rounded-xl border px-3 sm:hidden'>
+    <summary class='cursor-pointer py-3 font-medium'>分类</summary>
+    <nav aria-label='分类导航'>
+      <CategoryTree {categories} {counts} {currentId} />
+    </nav>
+    <a href={CATEGORY_ROOT} class='my-4 block text-sm hover:underline' data-astro-prefetch>
+      全部分类 →
+    </a>
+  </details>
+</aside>

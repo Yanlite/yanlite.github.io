@@ -1,0 +1,81 @@
+---
+import type { Category } from '@/utils/categories'
+import { categoryCatalog } from '@/utils/category-catalog'
+import { getCategoryUrl } from '@/utils/category-links'
+
+interface Props {
+  categories: readonly Category[]
+  counts: Map<string, number>
+  parentId?: string
+  currentId?: string
+}
+
+const { categories, counts, parentId, currentId } = Astro.props
+const activePath = currentId ? categoryCatalog.getPath(currentId).map(({ id }) => id) : []
+// 每次只显示当前父级的直接子分类；根层的 parentId 为 undefined。
+const nodes = categories.filter((category) => category.parent === parentId).map((category) => ({
+  ...category,
+  hasChildren: categories.some((child) => child.parent === category.id)
+}))
+---
+
+<ul class={parentId === undefined ? 'category-tree' : 'category-tree ms-5 border-s ps-3'}>
+  {nodes.map((category) => (
+    <li class='border-b'>
+      {category.hasChildren ? (
+        <details class='branch' open={activePath.includes(category.id)}>
+          <summary
+            class='flex cursor-pointer list-none items-baseline gap-2 py-3'
+            aria-label={`展开或收起 ${category.name} 的子分类`}
+          >
+            <span class='chevron inline-block w-5 shrink-0 text-center' aria-hidden='true'>›</span>
+            <a
+              href={getCategoryUrl(category.id)}
+              aria-current={category.id === currentId ? 'page' : undefined}
+              class='min-w-0 break-words hover:underline hover:underline-offset-4'
+              data-astro-prefetch
+            >{category.name}</a>
+            <span class='ms-auto shrink-0 text-sm text-muted-foreground'>
+              {counts.get(category.id) ?? 0} 篇
+            </span>
+          </summary>
+          {/* 分类表已校验无环，只对有子分类的节点继续递归。 */}
+          <Astro.self {categories} {counts} {currentId} parentId={category.id} />
+        </details>
+      ) : (
+        <div class='flex items-baseline gap-2 py-3'>
+          <span class='w-5 shrink-0' aria-hidden='true'></span>
+          <a
+            href={getCategoryUrl(category.id)}
+            aria-current={category.id === currentId ? 'page' : undefined}
+            class='min-w-0 break-words hover:underline hover:underline-offset-4'
+            data-astro-prefetch
+          >{category.name}</a>
+          <span class='ms-auto shrink-0 text-sm text-muted-foreground'>
+            {counts.get(category.id) ?? 0} 篇
+          </span>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  a[aria-current='page'] {
+    color: hsl(var(--primary));
+    font-weight: 600;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .branch[open] > summary .chevron {
+    transform: rotate(90deg);
+  }
+
+  summary:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+</style>

@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
+import { categoryCatalog } from './utils/category-catalog'
 
 function removeDupsAndLowerCase(array: string[]) {
   if (!array.length) return array
@@ -32,13 +33,22 @@ const blog = defineCollection({
           color: z.string().optional()
         })
         .optional(),
-      tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+      categories: z.array(z.string()).default([]).superRefine((ids, context) => {
+        const message = categoryCatalog.validateReferences(ids)
+        if (message) context.addIssue({ code: 'custom', message })
+      }),
+      // Reject forgotten old fields instead of silently dropping article assignments.
+      tags: z.never().optional(),
       language: z.string().optional(),
       draft: z.boolean().default(false),
       pin: z.boolean().optional(),
       // Special fields
       comment: z.boolean().default(true)
-    })
+    }).transform(({ tags: _legacyTags, ...data }) => ({
+      ...data,
+      // Temporary bridge for the original tag pages, Hero and theme utilities.
+      tags: [...data.categories]
+    }))
 })
 
 // Define docs collection

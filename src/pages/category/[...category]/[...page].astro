@@ -1,0 +1,73 @@
+---
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import CategoryPath from '@/components/category/CategoryPath.astro'
+import CategorySidebar from '@/components/category/CategorySidebar.astro'
+import PostPreview from '@/components/article/PostPreview.astro'
+import { categories } from '../../../data/categories'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import config from '@/site-config'
+import { categoryCatalog } from '@/utils/category-catalog'
+import { CATEGORY_ROOT } from '@/utils/category-links'
+import { Paginator } from 'astro-pure/components/pages'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import { Button } from 'astro-pure/user'
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = sortMDByDate<'blog'>(await getBlogCollection('blog'))
+  const categoryCounts = categoryCatalog.getCounts(posts, { includeDrafts: import.meta.env.DEV })
+  return categories.flatMap((category) => {
+    const matches = categoryCatalog.getPosts(posts, category.id, {
+      includeDrafts: import.meta.env.DEV
+    })
+    // Astro 对空数组也生成第一页，确保空分类有可访问的地址。
+    return paginate(matches, {
+      pageSize: config.content.blogPageSize,
+      params: { category: category.id },
+      props: { categoryCounts }
+    })
+  })
+}) satisfies GetStaticPaths
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>
+  categoryCounts: Map<string, number>
+}
+
+const { page, categoryCounts } = Astro.props
+const categoryId = Astro.params.category!
+const pathName = categoryCatalog.getPath(categoryId).map(({ name }) => name).join(' › ')
+const meta = { title: `分类 | ${pathName}`, description: `浏览“${pathName}”及其子分类的文章。` }
+const paginationProps = {
+  ...(page.url.prev && { prevUrl: { text: '← 上一页', url: page.url.prev } }),
+  ...(page.url.next && { nextUrl: { text: '下一页 →', url: page.url.next } })
+}
+---
+
+<PageLayout {meta}>
+  <Button title='全部分类' href={CATEGORY_ROOT} variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <p class='mb-2 text-sm text-muted-foreground'>分类</p>
+      <h1 class='mb-6 text-3xl font-medium'>
+        <CategoryPath categoryId={categoryId} current />
+      </h1>
+    </div>
+    <div class='grid gap-y-6 sm:grid-cols-[minmax(0,3fr)_minmax(0,1fr)] sm:gap-x-8'>
+      <section id='content' class='animate min-w-0' aria-label='分类文章列表'>
+      {page.total > 0 ? (
+        <>
+          <p class='mb-4 text-sm text-muted-foreground'>
+            第 {page.currentPage} 页 · 本页 {page.data.length} 篇 / 共 {page.total} 篇
+          </p>
+          <ul class='flex flex-col gap-y-4 text-start'>
+            {page.data.map((post) => <PostPreview {post} detailed />)}
+          </ul>
+          <Paginator {...paginationProps} />
+        </>
+      ) : <p>暂无文章。</p>}
+      </section>
+      <CategorySidebar counts={categoryCounts} currentId={categoryId} />
+    </div>
+  </main>
+</PageLayout>

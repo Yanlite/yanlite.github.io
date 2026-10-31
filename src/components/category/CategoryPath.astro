@@ -1,0 +1,31 @@
+---
+import { categoryCatalog } from '@/utils/category-catalog'
+import { getCategoryUrl } from '@/utils/category-links'
+
+interface Props {
+  categoryId: string
+  current?: boolean
+  searchFilter?: boolean
+}
+
+// 搜索标记仅供文章头部启用，卡片和其他导航默认不写入筛选信息。
+const { categoryId, current = false, searchFilter = false } = Astro.props
+const path = categoryCatalog.getPath(categoryId)
+---
+
+<span class='inline-flex flex-wrap items-center gap-x-1'>
+  {path.map((category, index) => (
+    <>
+      {index > 0 && <span aria-hidden='true' class='text-muted-foreground'>›</span>}
+      <a
+        href={getCategoryUrl(category.id)}
+        data-pagefind-filter={searchFilter ? 'category' : undefined}
+        aria-current={current && index === path.length - 1 ? 'page' : undefined}
+        class='hover:underline hover:underline-offset-4'
+        data-astro-prefetch
+      >
+        {category.name}
+      </a>
+    </>
+  ))}
+</span>
