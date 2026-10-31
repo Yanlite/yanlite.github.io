@@ -2,11 +2,13 @@
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 
-import { Paginator, PostPreview } from 'astro-pure/components/pages'
+import { Paginator } from 'astro-pure/components/pages'
+import PostPreview from '@/components/article/PostPreview.astro'
 import { getBlogCollection, getUniqueTagsWithCount, sortMDByDate } from 'astro-pure/server'
 import { Button, Icon } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import config from '@/site-config'
+import { getArticleUrl } from '@/utils/articles'
 
 export const prerender = true
 
@@ -14,10 +16,20 @@ export const getStaticPaths = (async ({ paginate }) => {
   const collections = sortMDByDate(await getBlogCollection())
   const uniqueTags = getUniqueTagsWithCount(collections).map(([tag]) => tag)
   const collectionsCount = collections.length
-  return paginate(collections, {
+  const pages = paginate(collections, {
     pageSize: config.content.blogPageSize,
     props: { uniqueTags, collectionsCount }
   })
+
+  // An article and a list page must not generate the same address.
+  const pageIds = new Set(pages.map(({ params }) => params.page))
+  for (const post of collections) {
+    if (pageIds.has(post.id)) {
+      throw new Error(`文章地址与列表分页冲突：${getArticleUrl(post.id)}。请修改文章 ID。`)
+    }
+  }
+
+  return pages
 }) satisfies GetStaticPaths
 
 interface Props {
@@ -29,8 +41,8 @@ interface Props {
 const { page, uniqueTags, collectionsCount } = Astro.props
 
 const meta = {
-  description: 'Some posts or archives of my blog',
-  title: 'Blog'
+  description: '文章列表与归档',
+  title: '文章'
 }
 
 const paginationProps = {
@@ -53,14 +65,14 @@ const paginationProps = {
   <Button title='Back' href='/' variant='back' />
   <main class='mt-6 lg:mt-10'>
     <div id='content-header' class='animate'>
-      <h1 class='mb-6 mt-6 text-3xl font-medium sm:mt-10'>Blog</h1>
+      <h1 class='mb-6 mt-6 text-3xl font-medium sm:mt-10'>文章</h1>
     </div>
     {
       page.data.length === 0 ? (
         <p>No posts yet.</p>
       ) : (
         <div class='grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8'>
-          <section aria-label='Blog posts list' class='animate' id='content'>
+          <section aria-label='文章列表' class='animate' id='content'>
             {/* header */}
             <div class='mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row'>
               <span class='text-muted-foreground'>

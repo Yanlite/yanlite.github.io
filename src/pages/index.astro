@@ -1,8 +1,9 @@
 ---
+import { ARTICLE_ROOT } from '@/utils/articles'
 import { Image } from 'astro:assets'
 
 import { Quote } from 'astro-pure/advanced'
-import { PostPreview } from 'astro-pure/components/pages'
+import PostPreview from '@/components/article/PostPreview.astro'
 import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 import { Button, Card, Icon, Label } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
@@ -93,7 +94,7 @@ if (!images[imagePath])
                 </li>
               ))}
             </ul>
-            <Button title='More posts' class='w-fit self-end' href='/blog' variant='ahead' />
+            <Button title='More posts' class='w-fit self-end' href={ARTICLE_ROOT} variant='ahead' />
           </Section>
         )
       }

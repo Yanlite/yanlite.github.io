@@ -1,3 +1,4 @@
+import { getArticleUrl } from '@/utils/articles'
 import type { AstroGlobal, ImageMetadata } from 'astro'
 import { getImage } from 'astro:assets'
 import type { CollectionEntry } from 'astro:content'
@@ -70,7 +71,7 @@ const GET = async (context: AstroGlobal) => {
     items: await Promise.all(
       allPostsByDate.map(async (post) => ({
         pubDate: post.data.publishDate,
-        link: `/blog/${post.id}`,
+        link: getArticleUrl(post.id),
         // `pubDate` intentionally stays on `publishDate` so aggregators do not re-flow an
         // edited post as new. `atom:updated` lets readers that support it detect the edit.
         customData: `<h:img src="${typeof post.data.heroImage?.src === 'string' ? post.data.heroImage?.src : post.data.heroImage?.src.src}" />

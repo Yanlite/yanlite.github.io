@@ -1,13 +1,14 @@
+import { ARTICLE_ROOT } from './utils/articles'
 import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } from 'astro-pure/types'
 
 export const theme: ThemeUserConfig = {
   // [Basic]
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: 'Astro Theme Pure',
+  title: 'ThRelic',
   /** Will be used in index page & copyright declaration */
-  author: 'Pure Lab',
+  author: 'Yanlite',
   /** Description metadata for your website. Can be used in page metadata. */
-  description: 'Stay hungry, stay foolish',
+  description: 'Thoughts and relics for wandering souls.',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
   favicon: '/favicon/favicon.ico',
   /** The default social card image for your site which should be a path to an image in the `public/` directory. */
@@ -26,8 +27,8 @@ export const theme: ThemeUserConfig = {
   },
   /** Set a logo image to show in the homepage. */
   logo: {
-    src: '/src/assets/avatar.png',
-    alt: 'Avatar'
+    src: '/src/assets/yanlite.jpg',
+    alt: 'Yanlite'
   },
 
   titleDelimiter: '•',
@@ -48,7 +49,7 @@ export const theme: ThemeUserConfig = {
   /** Configure the header of your site. */
   header: {
     menu: [
-      { title: 'Blog', link: '/blog' },
+      { title: '文章', link: ARTICLE_ROOT },
       { title: 'Docs', link: '/docs' },
       { title: 'Projects', link: '/projects' },
       { title: 'Links', link: '/links' },
@@ -64,8 +65,8 @@ export const theme: ThemeUserConfig = {
     links: [
       // Registration link
       {
-        title: 'Moe ICP 114514',
-        link: 'https://icp.gov.moe/?keyword=114514',
+        title: 'Moe ICP ?',
+        link: 'https://icp.gov.moe/?keyword=?',
         style: 'text-sm' // Uno/TW CSS class
       },
       // Privacy Policy link

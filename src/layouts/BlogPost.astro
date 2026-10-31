@@ -1,4 +1,5 @@
 ---
+import { ARTICLE_ROOT } from '@/utils/articles'
 import type { MarkdownHeading } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 
@@ -47,7 +48,7 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 <PageLayout
   meta={{ articleDate, description, ogImage: socialImage, title }}
   highlightColor={primaryColor}
-  back='/blog'
+  back={ARTICLE_ROOT}
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 
