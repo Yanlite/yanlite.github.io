@@ -12,7 +12,7 @@
 | 01 | [文章入口与链接迁移](01-article-routes.md) | 00 | 已完成；自有评论服务与文章清理交 07 |
 | 02 | [分类机制与列表侧栏](02-categories-and-sidebar.md) | 01 | 已完成；测试分类保留，复用接口与验证边界见 02 收尾交接 |
 | 03 | [首页与 About 内容整合](03-about-consolidation.md) | 02 | 已完成；内容去向、复用布局及验证边界见 03 交接 |
-| 04 | [临时文章首页](04-article-homepage.md) | 01、02、03 | 功能已实现；构建及主要预览验证通过，待用户复核，覆盖边界见 04 |
+| 04 | [临时文章首页](04-article-homepage.md) | 01、02、03 | 已完成；用户手动验收通过，复用接口与验证边界见 04 |
 | 05 | [个人信息、中文化与功能精简](05-personalization-and-cleanup.md) | 03、04 | 待开始 |
 | 06 | [隐藏页面与搜索排除](06-hidden-pages-and-search.md) | 05 | 待开始 |
 | 07 | [整体验收与 GitHub Pages 部署](07-pages-release.md) | 01–06 | 待开始 |
