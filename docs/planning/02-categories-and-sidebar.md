@@ -1,8 +1,8 @@
 # 02 分类机制与列表侧栏
 
-状态：进行中；分类基础、查询、侧栏、卡片及文章头部与搜索标记均已复核；旧标签清理和剩余验收尚未实施。前置：01。
+状态：进行中；分类基础、查询、侧栏、卡片及文章头部与搜索标记均已复核；旧标签机制已清理，新增类型检查范围调整待复核，剩余验收尚未完成。前置：01。
 
-阶段保存：按要求将已复核的分类功能、对应修复及规则整理本地提交为一个阶段版本；保留旧 /tags 页面和 schema 临时兼容层，尚未完成 02 整体验收，未推送或上线。下方各小步的“未提交”描述为实施当时的记录，当前提交位置以 Git 日志为准。
+阶段保存：`7aa34aa` 已按要求保存分类功能、对应修复及规则整理，当时仍保留旧 /tags 页面和 schema 临时兼容层。本次提交保存其后的旧标签清理和检查范围调整；未推送或上线。移除 packages/pure 源码副本仅为建议，尚未实施；提交保存不代表完成配置复核或 02 验收。下方各小步的状态为实施当时的记录，当前状态以本节及最新小步为准。
 
 先读 [总览](README.md)、[项目规则](../../AGENTS.md)、[00 交接](00-shared-design.md) 及前置任务的实际交接。先核对现场，再说明第一个小步；以下入口仅供调查，不是任意改写的清单。
 
@@ -135,7 +135,7 @@ src/content.config.ts、src/content/blog/、src/pages/tags/、文章列表侧栏
 
 ### 下一复核点与待办
 
-本地 Hero 与搜索分类标记已通过复核。下一小步删除旧标签页并移除 schema 将 categories 派生成 tags 的临时转换；保留旧 tags 输入的拒绝校验及 Docs 原字段。构建后检查站内链接和旧路由产物，再补足多层级、空分类与负向构建等剩余验收。旧标签地址目前仍可构建，属于过渡状态。
+旧标签页和临时字段转换已移除，见文末清理记录。先复核 tsconfig.json 对未使用上游源码副本的扫描排除，再补足多层级、空分类与负向构建等剩余验收；尚不能将 02 标为全部完成。
 
 ### 卡片分类参考样式（已随卡片通过复核）
 
@@ -167,3 +167,16 @@ src/content.config.ts、src/content/blog/、src/pages/tags/、文章列表侧栏
 - 本小步不删除旧标签页面或 schema 的临时 tags 派生，不继续依赖本地 Hero 开展清理，先留出复核点。未提交或推送。
 
 - 清理前核对：src 中实际使用文章 tags 汇总和旧 /tags 链接的入口仅余 `src/pages/tags/index.astro` 与 `src/pages/tags/[tag]/[...page].astro`；主题工具内部仍定义标签汇总函数，未修改安装包。待移除本地调用后验证构建依赖，不能仅凭文本搜索宣称兼容层已可安全移除。
+
+### 旧标签机制清理与检查范围调整（配置待复核）
+
+- 删除 `src/pages/tags/index.astro` 与 `src/pages/tags/[tag]/[...page].astro`，旧地址不提供跳转；分类统一使用 /category。
+- `src/content.config.ts` 删除从 categories 派生 tags 的临时 transform，保留 `tags: z.never().optional()` 拒绝旧输入。Docs 集合原 tags 及其去重函数保留；分类定义和文章归属未改动。
+- 首次构建失败：原 tsconfig include 扫描全仓库，`packages/pure` 中旧 Hero、PostPreview 和标签工具仍依赖 tags，报出 6 项类型错误。核对真实路径确认它与 `node_modules/astro-pure` 是独立目录；当前主题解析到安装包，应用、配置和预设脚本没有引用 packages/pure。
+- `tsconfig.json` 在 exclude 中新增精确目录 `./packages/pure`，不改 include、严格选项或 src 检查；对未导入的上游源码副本停止初始扫描，保留文件作为参考。未修改安装包或原主题源码。
+- exclude 影响 include 的初始文件收集，不能阻止显式导入重新纳入检查；语义依据：[TypeScript 官方说明](https://www.typescriptlang.org/tsconfig/#exclude)。将来若改为链接/开发上游源码，需要重新评估这条排除。
+- 重新 `npm run build` 通过：64 个应用相关文件检查无 errors / warnings / hints，生成 51 页。此前检查数包含上游副本；页面数从 59 减少 8 页，符合旧标签总览及 7 个公开标签详情的删除范围。原 Markdown 插件弃用提示保留。
+- parse5 解析全部 51 个构建 HTML，未发现指向本站 /tags 的实际 href；XML 未发现旧标签网址，dist/tags 不存在。src 的 Astro/TypeScript 实际页面与组件未再使用 /tags 或标签汇总函数。
+- 现场预览服务已停止，确认后重新启动固定 4322。HTTP 检查：/tags、/tags/example 为 404；/category、/category/technology、/article、/article/2、/docs 为 200。
+- 浏览器实际从分类总览点击技术（2 篇）并进入 3d-rendering 正文；头部仍有完整分类路径，当前正文没有旧标签链接。
+- `git diff --check` 通过。此小步新增清理及配置改动按要求提交保存；检查范围复核及源码副本处理仍需承接，再继续剩余验收。

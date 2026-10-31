@@ -37,18 +37,14 @@ const blog = defineCollection({
         const message = categoryCatalog.validateReferences(ids)
         if (message) context.addIssue({ code: 'custom', message })
       }),
-      // Reject forgotten old fields instead of silently dropping article assignments.
+      // 拒绝文章误填旧 tags 字段，避免分类归属被静默忽略。
       tags: z.never().optional(),
       language: z.string().optional(),
       draft: z.boolean().default(false),
       pin: z.boolean().optional(),
       // Special fields
       comment: z.boolean().default(true)
-    }).transform(({ tags: _legacyTags, ...data }) => ({
-      ...data,
-      // Temporary bridge for the original tag pages, Hero and theme utilities.
-      tags: [...data.categories]
-    }))
+    })
 })
 
 // Define docs collection
