@@ -1,9 +1,21 @@
 ---
-import PageLayout from '@/layouts/CommonPage.astro'
+import ProfileLayout from '@/layouts/ProfileLayout.astro'
 import config from '@/site-config'
+import avatar from '@/assets/yanlite.jpg'
+
+const headings = [
+  { depth: 2, slug: 'about-why', text: '目的' }
+]
 ---
 
-<PageLayout title={config.author}>
+<ProfileLayout
+  name={config.author}
+  {avatar}
+  links={[{ label: '主题源码', href: 'https://github.com/cworld1/astro-theme-pure' }]}
+  {headings}
+>
   <p>等 等一下啦</p>
   <p>还没想好自我介绍要怎么写</p>
-</PageLayout>
+  <h2 id='about-why'>关于为什么要写下这些文章</h2>
+  <p>TODO</p>
+</ProfileLayout>

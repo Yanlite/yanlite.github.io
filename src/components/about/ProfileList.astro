@@ -106,7 +106,7 @@ const { list } = Astro.props
     opacity: 1;
   }
 
-  /* 主题色由站点配置的 CSS 变量提供，不单独硬编码紫色。 */
+  /* 主题色由站点配置的 CSS 变量提供 */
   .profile-placeholder {
     border-radius: 50%;
     background-color: hsl(var(--primary) / 0.12);
@@ -120,6 +120,10 @@ const { list } = Astro.props
 
   .profile-avatar :global(.profile-photo[data-failed]) + .profile-placeholder {
     opacity: 1;
+  }
+  
+  .profile-avatar :global(.profile-photo),
+  .profile-avatar .profile-placeholder {
     transition: opacity 0.2s ease;
   }
 

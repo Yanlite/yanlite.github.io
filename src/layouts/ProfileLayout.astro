@@ -1,0 +1,123 @@
+---
+import type { ImageMetadata, MarkdownHeading } from 'astro'
+import { Image } from 'astro:assets'
+import { TOC } from 'astro-pure/components/pages'
+import ContentLayout from '@/layouts/ContentLayout.astro'
+
+interface Props {
+  name: string
+  avatar: ImageMetadata
+  links?: { label: string; href: string }[]
+  headings?: MarkdownHeading[]
+}
+
+const { name, avatar, links = [], headings = [] } = Astro.props
+---
+
+<ContentLayout meta={{ title: name }} back='/about'>
+  {/* 资料组占据顶部整行，正文和可选目录仍由 ContentLayout 排版。 */}
+  <section slot='top' class='profile-header animate mt-8 flex flex-col items-center gap-5 pb-6 pt-4' style='animation-delay: 50ms'>
+    <div class='profile-stage h-28 w-28'>
+      <div class='profile-depth h-full w-full'>
+        <div class='profile-avatar relative h-full w-full overflow-hidden rounded-full border bg-background p-1'>
+          <Image
+            src={avatar}
+            alt={`${name}的头像`}
+            width={160}
+            height={160}
+            loading='eager'
+            fetchpriority='high'
+            class='profile-photo relative z-10 h-full w-full rounded-full object-cover'
+            onload="this.dataset.loaded = 'true'; this.removeAttribute('data-failed')"
+            onerror="this.dataset.failed = 'true'; this.removeAttribute('data-loaded')"
+          />
+          <div class='profile-fallback absolute inset-1 flex items-center justify-center rounded-full' aria-hidden='true'>
+            <svg width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'>
+              <circle cx='12' cy='8' r='3.25' />
+              <path d='M5.5 20v-1.5a6.5 6.5 0 0 1 13 0V20' stroke-linecap='round' />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h1 class='text-3xl font-medium'>{name}</h1>
+    {
+      links.length > 0 && (
+        <nav aria-label='人物相关链接' class='flex flex-wrap justify-center gap-x-7 gap-y-3 text-sm'>
+          {links.map(({ label, href }) => <a href={href} class='underline underline-offset-4'>{label}</a>)}
+        </nav>
+      )
+    }
+  </section>
+
+  {headings.length > 0 && <TOC {headings} slot='sidebar' />}
+  <slot />
+</ContentLayout>
+
+<style>
+  /* 固定透视中心；Z 轴浮动只改变视觉远近，不挤动其他内容。 */
+  .profile-stage {
+    perspective: 800px;
+    perspective-origin: 50% 50%;
+  }
+
+  .profile-depth {
+    border-radius: 50%;
+    transform-origin: 50% 50%;
+    transform: translateZ(0);
+    box-shadow: 0 0 5px hsl(var(--foreground) / 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  /* 悬停或链接获得焦点时抬起并保持，离开后复原，不自动循环。 */
+  .profile-stage:hover .profile-depth {
+    transform: translateZ(20px);
+    box-shadow: 0 0 24px hsl(var(--foreground) / 0.18);
+  }
+
+  /* 旋转单独放在内层，避免覆盖中层的 Z 轴浮动。 */
+  .profile-avatar {
+    transform-origin: 50% 50%;
+    transition: transform 0.25s ease;
+  }
+
+  .profile-stage:hover .profile-avatar {
+    transform: rotate(-4deg);
+  }
+
+  .profile-avatar :global(.profile-photo) {
+    color: transparent;
+    font-size: 0;
+    opacity: 0;
+  }
+
+  .profile-avatar :global(.profile-photo[data-loaded]) {
+    opacity: 1;
+  }
+
+  .profile-fallback {
+    background-color: hsl(var(--primary) / 0.12);
+    color: hsl(var(--primary));
+    opacity: 0;
+  }
+
+  .profile-avatar :global(.profile-photo[data-failed]) + .profile-fallback {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .profile-depth,
+    .profile-stage:hover .profile-depth,
+    .profile-header:focus-within .profile-depth {
+      transition: none;
+      transform: none;
+    }
+
+    .profile-avatar,
+    .profile-stage:hover .profile-avatar,
+    .profile-header:focus-within .profile-avatar {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

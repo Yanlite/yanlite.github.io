@@ -17,6 +17,8 @@ const { meta, highlightColor, back = '/', ...props } = Astro.props
 
 <PageLayout {meta} {highlightColor} {...props}>
   <Button title='Back' href={back} variant='back' />
+  {/* 顶部内容横跨正文与侧栏；未提供时不生成额外元素。 */}
+  <slot name='top' />
   <main class='mt-6 items-start gap-x-10 md:flex'>
     {/* Sidebar */}
     <aside
