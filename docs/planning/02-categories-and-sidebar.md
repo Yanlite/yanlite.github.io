@@ -1,8 +1,8 @@
 # 02 分类机制与列表侧栏
 
-状态：进行中；分类基础、查询、侧栏、卡片及文章头部与搜索标记均已复核；旧标签机制已清理，未使用主题源码副本已移除，移除结果待复核，剩余验收尚未完成。前置：01。
+状态：已完成；按收尾清单保留现状，未点名事项不再修改。分类功能、旧标签清理、源码副本移除及验收交接完成；测试覆盖边界与保留事项见文末。前置：01。
 
-阶段保存：`7aa34aa` 保存分类功能、对应修复及规则整理；`daae717` 保存其后的旧标签清理和检查范围调整，未推送或上线。随后已移除 packages/pure 源码副本并撤掉对应检查排除项，这部分尚未提交，待复核。下方各小步的状态为实施当时的记录，当前状态以本节及最新小步为准。
+阶段保存：`7aa34aa` 保存分类功能、对应修复及规则整理；`daae717` 保存旧标签清理和检查范围调整；`b876105` 保存源码副本移除及对应配置清理。当前收尾文档与用户新增测试分类尚未提交，未推送或上线。下方各小步的状态为实施当时的记录，当前状态以本节及文末收尾交接为准。
 
 先读 [总览](README.md)、[项目规则](../../AGENTS.md)、[00 交接](00-shared-design.md) 及前置任务的实际交接。先核对现场，再说明第一个小步；以下入口仅供调查，不是任意改写的清单。
 
@@ -135,7 +135,7 @@ src/content.config.ts、src/content/blog/、src/pages/tags/、文章列表侧栏
 
 ### 下一复核点与待办
 
-旧标签页和临时字段转换已移除，见文末清理记录。未使用的上游源码副本及对应检查排除项也已移除；先复核移除结果，再补足多层级、空分类与负向构建等剩余验收，尚不能将 02 标为全部完成。
+本任务已按文末清单收尾，不再新增功能或补做未点名的测试。后续按总览进入 03，04 在满足前置后复用下述接口；保留事项不作为 02 阻塞项。
 
 ### 卡片分类参考样式（已随卡片通过复核）
 
@@ -190,3 +190,30 @@ src/content.config.ts、src/content/blog/、src/pages/tags/、文章列表侧栏
 - `npm run build` 成功：64 文件检查无 errors / warnings / hints，生成 51 页，与移除前一致；原 Markdown 插件弃用提示仍在。`git diff --check` 通过。本步未改界面或交互，未重复浏览器验收。
 - 原主题 Docs 中有关本地包开发的说明暂保留，属于主题文档而非本项目操作规则；Docs 的隐藏与搜索排除仍交 06。
 - 本小步未提交或推送。先复核目录移除与配置清理，再开展 02 剩余验收。
+
+### 实际 Markdown 未知分类引用验证
+
+- 临时新增 category-invalid-probe.md，其他必填字段正常，设置 `draft: true`、`comment: false`，分类仅填写不存在的 `category-does-not-exist-probe`。
+- `npm run build` 退出码为 1：内容同步阶段报 InvalidContentEntryDataError，明确定位临时 Markdown 文件，并提示“文章引用不存在的分类：category-does-not-exist-probe”。证明校验接入真实内容链路，草稿也不会绕过引用校验。
+- 首次沙箱构建被 Astro 配置目录的 EPERM 阻止，未作为分类验证结果；随后在允许的沙箱外构建中得到上述预期错误。
+- 已删除临时文件，正式文章无 Git 差异；恢复后构建通过，64 文件检查无 errors / warnings / hints，生成 51 页。原 Markdown 插件弃用提示仍在。未修改业务代码或提交 Git。
+- 本步只验证未知引用；重复引用、分类定义错误等仍以已有工具测试覆盖，未宣称完成所有负向构建或 02 整体验收。
+
+### 三级分类手动验收
+
+- 用户反馈三级分类测试完成、没有问题，记录为用户手动验收通过；未追加推定具体浏览器、视口或逐项操作记录。
+- 现场分类表含 test-a → test-b1 → test-c 三级关系，以及 test-a 下的 test-b2 兄弟分类；这些为用户新增测试数据，本轮保留，不擅自删除或修改。
+- 三级分类的实际界面验证不再列为待办；测试分类是否保留仍需在最终收尾时确认。此次仅更新文档，未重新构建或重复浏览器测试。
+
+### 最终收尾与后续复用
+
+- 收尾清单已确认：未点名内容保持现状。保留 test-a、test-b1、test-b2、test-c 四个测试分类，不自动清理；正式发布前由 07 统一核对测试内容的处置。
+- 分类树、侧栏、父级统计、多归属去重、分页、空分类、详细卡片前两项与正文完整归属、搜索父级与第三归属、草稿过滤均有前述测试或页面验证；三级分类由用户手动验收通过。
+- 未知分类引用经过实际 Markdown 负向构建；重复引用、无效定义、循环等以已有工具测试覆盖，不宣称逐项完成实际构建测试。最后一次 Agent 正常构建为 64 文件检查零错误、51 页；其后用户新增三级测试分类并反馈通过，未再由 Agent 重跑构建。
+- 原主题 Docs 的本地包开发说明保留，隐藏与搜索排除交 06；Markdown 插件弃用提示不在本任务处理；搜索筛选与列表中现存英文界面交 05。
+- 手动数据入口：`src/data/categories.ts` 维护 ID、显示名与父级；文章 frontmatter 的 categories 数组维护有序归属。路径分隔符在 `src/components/category/CategoryPath.astro`。
+- 共享查询入口：`src/utils/category-catalog.ts` 导出 categoryCatalog；`getPosts(posts, categoryId, options?)` 返回父级及后代去重文章，`getCounts(posts, options?)` 返回含零数量项的 Map。includeDrafts 默认 false；统计用全量文章，不使用分页后的 page.data。
+- 组件入口：`CategorySidebar.astro` 接收 counts 和可选 currentId；`CategoryPath.astro` 接收 categoryId、可选 current 和 searchFilter。只有正文 Hero 启用搜索标记，普通导航默认不启用。
+- 04 可参考 `src/pages/article/[...page].astro` 的内容获取、排序、统计、分页与组件组合，复用 `src/components/article/PostPreview.astro`、分类侧栏及主题 Paginator；PostPreview 默认简版，传 detailed 才显示分类等详细信息。当前尚未抽出独立列表组件，不应假定已有现成列表封装。
+- 文章链接继续由 `src/utils/articles.ts` 生成；分类链接由 `src/utils/category-links.ts` 的 CATEGORY_ROOT、getCategoryUrl(id) 生成。04 自行复核首页与 /article 的地址、分页和元数据方案，不在 02 提前实现。
+- 本轮收尾只更新文档，未修改测试分类或业务代码，未自动提交、推送或上线。
