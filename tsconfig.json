@@ -27,11 +27,9 @@
     }
     // https://docs.astro.build/en/guides/typescript/#typescript-editor-plugin
   },
-  // packages/pure 是未参与当前应用导入的上游源码副本；实际主题依赖来自 node_modules。
   "exclude": [
     "./node_modules",
     "./**/node_modules/*",
-    "./packages/pure",
     "./.vscode",
     "./dist",
     "./public/scripts/*",
