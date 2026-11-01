@@ -15,10 +15,10 @@ export const theme: ThemeUserConfig = {
   socialCard: '/images/social-card.png',
   /** Specify the default language for this site. */
   locale: {
-    lang: 'en-US',
-    attrs: 'en_US',
+    lang: 'zh-CN',
+    attrs: 'zh_CN',
     // Date locale
-    dateLocale: 'en-US',
+    dateLocale: 'zh-CN',
     dateOptions: {
       day: 'numeric',
       month: 'short',
@@ -50,10 +50,10 @@ export const theme: ThemeUserConfig = {
   header: {
     menu: [
       { title: '文章', link: ARTICLE_ROOT },
-      { title: 'Docs', link: '/docs' },
-      { title: 'Projects', link: '/projects' },
-      { title: 'Links', link: '/links' },
-      { title: 'About', link: '/about' }
+      { title: '文档', link: '/docs' },
+      { title: '项目', link: '/projects' },
+      { title: '友链', link: '/links' },
+      { title: '关于', link: '/about' }
     ]
   },
 
@@ -71,7 +71,7 @@ export const theme: ThemeUserConfig = {
       },
       // Privacy Policy link
       {
-        title: 'Site Policy',
+        title: '站点政策',
         link: '/terms',
         pos: 2 // position set to 2 will be appended to copyright line
       }
@@ -81,7 +81,7 @@ export const theme: ThemeUserConfig = {
     /** Optional details about the social media accounts for this site. */
     social: [
       { icon: 'github', label: 'GitHub', href: 'https://github.com/cworld1/astro-theme-pure' },
-      { icon: 'rss', label: 'RSS', href: '/rss.xml' }
+      { icon: 'rss', label: 'RSS 订阅', href: '/rss.xml' }
     ]
   },
 
@@ -174,34 +174,35 @@ export const integ: IntegrationUserConfig = {
     // Refer https://waline.js.org/en/reference/client/props.html
     additionalConfigs: {
       // search: false,
+      lang: 'zh-CN',
       locale: {
-        nick: 'Name',
-        mail: 'Email',
-        login: 'Login (Optional)',
-        placeholder: 'Comment here... (Email to receive replies)',
-        reaction0: 'Like'
+        nick: '昵称',
+        mail: '邮箱',
+        login: '登录（可选）',
+        placeholder: '写下评论……（填写邮箱可接收回复）',
+        reaction0: '赞'
       }
     }
   }
 }
 
 export const terms: CardListData = {
-  title: 'Terms content',
+  title: '站点政策',
   list: [
     {
-      title: 'Privacy Policy',
+      title: '隐私政策',
       link: '/terms/privacy-policy'
     },
     {
-      title: 'Terms and Conditions',
+      title: '使用条款',
       link: '/terms/terms-and-conditions'
     },
     {
-      title: 'Copyright',
+      title: '版权声明',
       link: '/terms/copyright'
     },
     {
-      title: 'Disclaimer',
+      title: '免责声明',
       link: '/terms/disclaimer'
     }
   ]

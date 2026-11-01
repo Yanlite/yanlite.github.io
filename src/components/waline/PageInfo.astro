@@ -20,13 +20,13 @@ const path = Astro.url.pathname
   data-comment={comment ? 'true' : 'false'}
   {...props}
 >
-  <span class='waline-pageview-count' data-path={path}></span> views
+  <span class='waline-pageview-count' data-path={path}></span> 次阅读
   {
     comment && (
       <>
         {' | '}
         <a href='#waline'>
-          <span class='waline-comment-count' data-path={path} /> comments
+          <span class='waline-comment-count' data-path={path} /> 条评论
         </a>
       </>
     )

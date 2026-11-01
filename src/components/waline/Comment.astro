@@ -12,7 +12,7 @@ const { class: className } = Astro.props
   config.integ.waline.enable && (
     <comment-component>
       <div id='waline' class={cn('not-prose', className)}>
-        Comment seems to stuck. Try to refresh?✨
+        评论正在加载，若长时间没有显示，请尝试刷新页面。
       </div>
     </comment-component>
   )
@@ -168,7 +168,7 @@ const { class: className } = Astro.props
   }
   #waline :global(.wl-reaction-votes:after) {
     margin-left: 0.25em;
-    content: 'Like(s)';
+    content: '赞';
     display: inline-block;
     clear: both;
     border: 0;

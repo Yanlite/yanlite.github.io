@@ -19,7 +19,7 @@ const path = categoryCatalog.getPath(categoryId)
       {index > 0 && <span aria-hidden='true' class='text-muted-foreground'>›</span>}
       <a
         href={getCategoryUrl(category.id)}
-        data-pagefind-filter={searchFilter ? 'category' : undefined}
+        data-pagefind-filter={searchFilter ? '分类' : undefined}
         aria-current={current && index === path.length - 1 ? 'page' : undefined}
         class='hover:underline hover:underline-offset-4'
         data-astro-prefetch

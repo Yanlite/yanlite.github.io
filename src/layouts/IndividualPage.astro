@@ -1,7 +1,8 @@
 ---
 import type { MarkdownHeading, MarkdownLayoutProps } from 'astro'
 
-import { BackToTop, TOC } from 'astro-pure/components/pages'
+import BackToTop from '@/components/site/BackToTop.astro'
+import TOC from '@/components/site/TOC.astro'
 import { Button, Icon } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
 import PageLayout from '@/layouts/BaseLayout.astro'
@@ -23,7 +24,7 @@ const socialImage = heroImage?.src ?? config.socialCard
 ---
 
 <PageLayout meta={{ title, description, ogImage: socialImage }}>
-  <Button title='Back' href={back ?? '/'} variant='back' />
+  <Button title='返回' href={back ?? '/'} variant='back' />
   <main class='mt-6 items-start gap-x-10 md:flex lg:mt-10'>
     {
       !!headings.length && (

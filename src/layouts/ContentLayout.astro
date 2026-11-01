@@ -1,5 +1,5 @@
 ---
-import { BackToTop } from 'astro-pure/components/pages'
+import BackToTop from '@/components/site/BackToTop.astro'
 import type { SiteMeta } from 'astro-pure/types'
 import { Button, Icon } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
@@ -17,7 +17,7 @@ const { meta, highlightColor, back = '/', listing = false, ...props } = Astro.pr
 ---
 
 <PageLayout {meta} {highlightColor} {...props}>
-  {back && <Button title='Back' href={back} variant='back' />}
+  {back && <Button title='返回' href={back} variant='back' />}
   {/* 顶部内容横跨正文与侧栏；未提供时不生成额外元素。 */}
   <slot name='top' />
   <main class={listing ? 'mt-6 lg:mt-10' : 'mt-6 items-start gap-x-10 md:flex'}>
@@ -71,7 +71,7 @@ const { meta, highlightColor, back = '/', listing = false, ...props } = Astro.pr
   <BackToTop header='content-header' content='content'>
     {!listing && <button
       slot='other-icons'
-      aria-label='Toggle sidebar'
+      aria-label='展开或收起目录'
       class='size-10 flex items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground duration-300 hover:border-border/75 md:hidden sm:size-12'
       id='sidebar-btn'
     >

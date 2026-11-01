@@ -1,6 +1,6 @@
 # 05 个人信息、中文化与功能精简
 
-状态：待开始。前置：03、04。
+状态：进行中；主要保留界面中文化完成，个人资料取舍与功能精简待办。前置：03、04。
 
 先读 [总览](README.md)、[项目规则](../../AGENTS.md)、[00 交接](00-shared-design.md) 及前置任务的实际交接。先核对现场，再说明第一个小步；以下入口仅供调查，不是任意改写的清单。
 
@@ -34,4 +34,17 @@ src/site.config.ts、About、本地布局和页面、主题 Header/Footer 与按
 
 ## 交接记录
 
-尚未开始。执行时按仓库 AGENTS.md 记录完成/待办、已确认/待复核、修改文件与接口、验证与遗漏、讲解进度与用户反馈、手动维护入口及下一步。
+- 已核对配置、本地列表/布局/页面及安装包 Header/Footer/搜索组件的文案来源；保留现有个人资料与源码来源署名，尚未执行功能清理。
+- src/site.config.ts 的 lang、dateLocale 为 zh-CN，attrs 已修正为 zh_CN；导航、政策链接、评论配置文案已中文化。站名、作者、英文简介、头像及作者正文保留。
+- src/components/article/ArticleList.astro 的分页、空列表、统计及归档入口已由用户中文化并反馈验证通过；diff 核对原参数、链接与分页逻辑保留。本轮未独立构建或预览。
+- 归档、搜索、404 元数据及本地布局返回/目录开关已中文化。保留用户自行修改的 ArticleList 与 404 文案。政策页仅翻译原有占位内容与标题，原日期保留，不代表正式政策已制定。
+- 按需接管 astro-pure 1.4.9 的 Header、Footer、BackToTop、TOC、TOCHeading、PFSearch 至 src/components/site/；Copyright 至 src/components/article/。保留来源与许可说明，不修改安装包；公共依赖仍从包入口导入。目录生成内部函数接管至 src/utils/toc.ts，保持原层级规则。
+- BaseLayout 接入本地 Header/Footer；CommonPage、ProfileLayout、IndividualPage、BlogPost 接入本地目录；ContentLayout/IndividualPage 接入本地返回顶部。参数与插槽保持原样。
+- 文章 Hero/PostPreview 的置顶、草稿、更新日期和阅读时长中文化，阅读时长仅将主题生成的末尾 min 换为“分钟”，不改变估算规则。评论计数、加载占位、点赞及 Waline 语言配置中文化，未改评论服务。
+- 搜索文案维护于 src/components/site/PFSearch.astro 的 translations；分类过滤名称由 CategoryPath 的 data-pagefind-filter 从 category 改为“分类”，对应索引已重新生成，分类 ID 与页面地址不变。后续消费过滤条件时使用该中文键。
+- 文章许可显示 CC BY-NC-SA 4.0，但链接指向 CC BY 4.0，已确认暂不决定并保留原状；不可视为许可一致性验收通过。
+- 验证：最终 npm run build 通过，77 文件检查零错误/警告/提示，生成 56 页；保留原 Markdown 插件弃用提示。git diff --check 通过。构建 HTML 核对首页、文章入口与分页、归档、搜索、About/作者页、文章详情、政策入口和 404 的语言元数据。
+- 生产预览复用已确认属于本项目的 4322 服务；实际验证中文搜索结果、加载更多、清除、无结果提示、分类筛选（markdown 选项为两篇）、移动导航展开、归档入口、归档文章跳转、文章窄屏目录展开及锚点跳转、配色切换中文提示。搜索在窄屏和桌面截图中布局正常；桌面 DOM clientWidth/scrollWidth 均为 1265，临时视口覆盖已恢复。
+- 未全面回归每个页面或构造全站空文章；未提交评论、点赞或点击外部分享。评论远端完整状态、二维码及复制交互未在本轮全面验收，正式评论服务交 07。Docs/Links/Projects 页面正文未整批翻译，按 06 隐藏与排除搜索，当前仍可搜索到 Docs。
+- 下一小步：确认页脚社交资料、Moe ICP 占位与政策入口的去留，随后处理赞助入口与对应引用。当前仅翻译咖啡入口，尚未删除赞助功能，不将中文化当作 05 整体完成。
+- 个人链接、页脚政策入口与功能精简清单仍待对应小步确认；Docs/Links/Projects 隐藏与搜索排除交 06，评论服务交 07。

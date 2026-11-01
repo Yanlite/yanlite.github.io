@@ -1,10 +1,10 @@
 ---
 layout: '@/layouts/IndividualPage.astro'
 
-title: 'Copyright'
-description: 'Effective date: 2024-11-26'
-language: 'En'
+title: '版权声明'
+description: '生效日期： 2024-11-26'
+language: '中文'
 back: '/terms'
 ---
 
-It may be recommended to generate policies from [PolicyMaker.io](https://policymaker.io).
+可考虑使用 [PolicyMaker.io](https://policymaker.io) 生成政策文本。

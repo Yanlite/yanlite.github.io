@@ -7,7 +7,9 @@ import type { CollectionEntry } from 'astro:content'
 import 'katex/dist/katex.min.css'
 
 import { MediumZoom } from 'astro-pure/advanced'
-import { ArticleBottom, Copyright, TOC } from 'astro-pure/components/pages'
+import { ArticleBottom } from 'astro-pure/components/pages'
+import Copyright from '@/components/article/Copyright.astro'
+import TOC from '@/components/site/TOC.astro'
 // 使用项目内的头部组件，分类展示的维护入口为 src/components/article/Hero.astro。
 import Hero from '@/components/article/Hero.astro'
 import PageLayout from '@/layouts/ContentLayout.astro'

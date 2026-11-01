@@ -110,8 +110,8 @@ const categoryIds = ('categories' in data ? data.categories : []).slice(0, 2)
       {/* 文章标题与状态：显示置顶、草稿标记，以及提示跳转的箭头。 */}
       <div class='flex justify-between flex-grow'>
         <div class={cn(detailed && 'font-medium')}>
-          {previewData.pin && <span class='text-primary me-1'>[Pin]</span>}
-          {data.draft && <span class='text-red-500 me-1'>(Draft)</span>}
+          {previewData.pin && <span class='text-primary me-1'>[置顶]</span>}
+          {data.draft && <span class='text-red-500 me-1'>（草稿）</span>}
           {data.title}
         </div>
         <svg
@@ -153,7 +153,7 @@ const categoryIds = ('categories' in data ? data.categories : []).slice(0, 2)
               {/* 阅读时长：显示 Markdown 渲染时提取的估算值。 */}
               <span class='flex items-center gap-1'>
                 <Icon name='time' class='size-4' />
-                {remarkPluginFrontmatter.minutesRead}
+                {String(remarkPluginFrontmatter.minutesRead ?? '').replace(/ min$/, ' 分钟')}
               </span>
               {/* 文章语言：仅在文章提供语言资料时显示。 */}
               {previewData.language && (
