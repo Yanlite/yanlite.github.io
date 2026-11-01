@@ -1,7 +1,8 @@
 ---
 import ProfileLayout from '@/layouts/ProfileLayout.astro'
-import config from '@/site-config'
-import avatar from '@/assets/yanlite.jpg'
+import { profiles } from '../../data/profiles'
+
+const profile = profiles['/about/yanlite']
 
 const headings = [
   { depth: 2, slug: 'about-why', text: '目的' }
@@ -9,14 +10,9 @@ const headings = [
 ---
 
 <ProfileLayout
-  name={config.author}
-  {avatar}
-  links={[
-    { label: 'GitHub', href: 'https://github.com/yanlite' },
-    { label: 'Bilibili', href: 'https://space.bilibili.com/454015318' },
-    { label: '知乎', href: 'https://www.zhihu.com/people/zilo-38-18' },
-    { label: '洛谷', href: 'https://www.luogu.com.cn/user/945401' },
-  ]}
+  name={profile.name}
+  avatar={profile.avatar}
+  links={profile.links}
   {headings}
 >
   <p>等 等一下啦</p>
