@@ -1,6 +1,6 @@
 # 07 整体验收与 GitHub Pages 部署
 
-状态：进行中，未上线。前置：01–06。Pages工作流初稿保存于3e7652e，触发分支已按选择改为main，尚未提交；本机分支整合待处理，未推送或执行Linux构建。
+状态：进行中，未上线。前置：01–06。Pages工作流已在475f116改为从main发布；本机main已整理，旧main保留为备份。用户已网页确认Pages发布来源及main部署规则，下一步提交交接并按授权推送，Linux构建尚未执行。
 
 入口：[项目规则](../../AGENTS.md)、[规划总览](README.md)、[00 基线](00-shared-design.md)。前置功能及历史验收以各任务交接为准，不在此重复。
 
@@ -8,7 +8,7 @@
 
 - 完成首版整体检查、可复现安装、Linux 构建与 GitHub Pages 发布，并按有效授权执行上线。
 - 不自动提交、推送、覆盖旧 main、强推、重置或发布；保留备份，不升级主题。
-- npm锁文件及本机干净安装复现已完成；Linux及整站/线上验收仍待完成。Linux构建与部署使用同一份Pages工作流，推送main触发，平台设置尚未核对。
+- npm锁文件及本机干净安装复现已完成；Linux及整站/线上验收仍待完成。Linux构建与部署使用同一份Pages工作流，推送main触发；平台设置由用户网页核对，尚未通过实际部署验证。
 
 ## 已确认取舍
 
@@ -61,8 +61,8 @@
 
 - 文件：`.github/workflows/pages.yml`。仅在推送`main`时触发，构建成功后直接尝试部署；不是仅运行检查。提交到本机不会触发，不自动推送。
 - 构建：`ubuntu-latest`、Node.js `24.19.0`（与本机一致）、npm下载缓存、`npm ci`、`node --test tests/*.test.mjs`、`npm run build`，上传`dist/`；部署任务依赖构建成功，使用`github-pages`环境和GitHub内置授权，无需自建发布分支。
-- 分支现场：远端唯一分支及默认分支main位于808ce76，是当前成果的祖先；本机main位于22d4257，另有16个旧多语言提交，与当前成果分叉。本机旧main须保留备份，整理方式待复核，尚未移动分支。
-- 发布前平台核对：仓库Settings → Pages的Source设为GitHub Actions；Settings → Environments → github-pages允许`main`部署。现有平台设置未读取或修改，不视为已配置。
+- 分支现场：按通过的方案，将本机旧main改名为`backup/main-before-task07`（22d4257，含16个旧多语言提交）；从当前成果建立新main，与`research/theme-restart`同在475f116，文件差异为空。远端main仍为808ce76，是新main的祖先，未推送；后续可正常向前更新，无需强推。
+- 发布前平台核对：用户网页确认Pages的Source为GitHub Actions，`github-pages`环境存在且允许main。连接器无对应管理接口，Agent未独立读取设置；实际部署验证待执行。
 - 本地验证：YAML解析无错误，触发分支、构建命令、部署任务依赖与上传目录已核对；9项现有测试通过，diff检查通过。未改网站源码，沿用许可修正后的构建结果；Linux执行、产物上传及线上部署仍未验证。
 - 维护：若以后更换发布分支，同时调整`on.push.branches`与环境允许的分支。当前不提供手动触发，避免工作流未在默认分支时无法使用Run workflow按钮的误导。
 - 依据：[Astro Pages指南](https://docs.astro.build/en/guides/deploy/github/)、[官方产物上传](https://github.com/actions/upload-pages-artifact)、[官方Pages部署](https://github.com/actions/deploy-pages)。
