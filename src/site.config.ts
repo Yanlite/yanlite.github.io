@@ -50,9 +50,7 @@ export const theme: ThemeUserConfig = {
   header: {
     menu: [
       { title: '文章', link: ARTICLE_ROOT },
-      { title: '文档', link: '/docs' },
-      { title: '项目', link: '/projects' },
-      { title: '友链', link: '/links' },
+      { title: '分类', link: '/category' },
       { title: '关于', link: '/about' }
     ]
   },

@@ -39,16 +39,14 @@ html.dark {
   color-scheme: dark;
 }
 
-/* 切换主题过渡时长。 */
-:root {
-  --theme-transition-duration: 500ms;
+/* 预留侧边滚动条的空间。 */
+html {
+  scrollbar-gutter: stable;
 }
-
-
 
 /* Global */
 a {
-  transition: color 0.24s ease;
+  transition: color 0.2s ease;
   &:hover {
     color: hsl(var(--primary) / var(--un-text-opacity, 1));
   }
