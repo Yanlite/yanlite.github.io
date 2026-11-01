@@ -1,6 +1,6 @@
 import yanliteAvatar from '../assets/yanlite.jpg'
 
-// 按本站人物页路径登记共享资料，页面和文章署名可使用同一来源。
+// 键为人物页的站内路径，须与引用该人物的 href 完全一致。
 export const profiles = {
   '/about/yanlite': {
     name: 'Yanlite',

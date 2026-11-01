@@ -2,12 +2,12 @@
 import { Font } from 'astro:assets'
 
 import { prod } from 'astro-pure/server'
-import type { SiteMeta } from 'astro-pure/types'
+import type { SiteMeta } from '../types/site-meta'
 import config from 'virtual:config'
 
 type Props = SiteMeta
 
-const { articleDate, description, ogImage, title } = Astro.props
+const { articleDate, authors, description, ogImage, title } = Astro.props
 
 const siteTitle = `${title} ${config.titleDelimiter} ${config.title}`
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
@@ -43,7 +43,9 @@ const socialImageURL = socialImage ? new URL(socialImage, Astro.url).href : unde
 {/* Primary Meta Tags */}
 <meta content={siteTitle} name='title' />
 <meta content={description} name='description' />
-<meta content={config.author} name='author' />
+{authors?.length
+  ? authors.map((author) => author.name && <meta content={author.name} name='author' />)
+  : <meta content={config.author} name='author' />}
 
 {/* Theme Color */}
 {/* <meta content='' name='theme-color' /> */}
@@ -60,7 +62,11 @@ const socialImageURL = socialImage ? new URL(socialImage, Astro.url).href : unde
 {
   articleDate && (
     <>
-      <meta content={config.author} property='article:author' />
+      {authors?.length
+        ? authors.map((author) => author.href && (
+          <meta content={new URL(author.href, Astro.site).href} property='article:author' />
+        ))
+        : <meta content={config.author} property='article:author' />}
       <meta content={articleDate} property='article:published_time' />
     </>
   )

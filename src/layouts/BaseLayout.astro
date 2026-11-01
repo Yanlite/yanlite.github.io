@@ -2,7 +2,7 @@
 import { ThemeProvider } from 'astro-pure/components/basic'
 import Header from '@/components/site/Header.astro'
 import Footer from '@/components/site/Footer.astro'
-import type { SiteMeta } from 'astro-pure/types'
+import type { SiteMeta } from '../types/site-meta'
 import BaseHead from '@/components/BaseHead.astro'
 import config from '@/site-config'
 
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const {
-  meta: { articleDate, description = config.description, ogImage, title },
+  meta: { articleDate, authors, description = config.description, ogImage, title },
   highlightColor,
   ...props
 } = Astro.props
@@ -25,7 +25,7 @@ const {
 
 <html lang={config.locale.lang}>
   <head>
-    <BaseHead {articleDate} {description} {ogImage} {title} />
+    <BaseHead {articleDate} {authors} {description} {ogImage} {title} />
     <ThemeProvider />
   </head>
 

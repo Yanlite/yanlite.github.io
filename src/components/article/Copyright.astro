@@ -1,7 +1,8 @@
 ---
 // 改编自 astro-pure 1.4.9（cworld1/astro-theme-pure），Apache-2.0；见 LICENSE。
-// 项目改动：界面中文化，依赖改用公开包入口。
+// 项目改动：界面中文化，依赖改用公开包入口，支持逐篇多作者显示。
 import type { CollectionKey, InferEntrySchema } from 'astro:content'
+import type { ResolvedAuthor } from '@/utils/authors'
 
 import config from 'virtual:config'
 
@@ -11,10 +12,11 @@ import { Icon } from 'astro-pure/user'
 
 interface Props<T extends CollectionKey> {
   data: InferEntrySchema<T>
+  authors?: ResolvedAuthor[]
   class?: string
 }
 
-const { data, class: className } = Astro.props
+const { data, authors = [], class: className } = Astro.props
 const { title, publishDate } = data
 const heroImage = 'heroImage' in data ? data.heroImage : undefined
 
@@ -49,9 +51,21 @@ const shares = {
 
   {/* common info */}
   <div class='flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8'>
-    <div class='flex gap-x-2 sm:flex-col'>
+    <div class='flex min-w-0 gap-x-2 sm:flex-col'>
       <span>作者</span>
-      <span class='text-sm text-foreground max-sm:place-self-center'>{config.author}</span>
+      {authors.length > 0 ? (
+        <ul class='m-0 flex list-none flex-wrap gap-x-3 gap-y-1 p-0 text-sm text-foreground max-sm:place-self-center'>
+          {authors.map((author) => (
+            <li class='flex min-w-0 max-w-full items-center'>
+              {author.href
+                ? <a href={author.href} class='min-w-0 break-words'>{author.name}</a>
+                : <span class='min-w-0 break-words'>{author.name}</span>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <span class='text-sm text-foreground max-sm:place-self-center'>{config.author}</span>
+      )}
     </div>
     {
       publishDate && (

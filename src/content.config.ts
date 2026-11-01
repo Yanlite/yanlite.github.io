@@ -2,6 +2,7 @@ import { defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 import { categoryCatalog } from './utils/category-catalog'
+import { isAuthorHref } from './utils/authors'
 
 function removeDupsAndLowerCase(array: string[]) {
   if (!array.length) return array
@@ -22,6 +23,12 @@ const blog = defineCollection({
       description: z.string().max(160),
       publishDate: z.coerce.date(),
       // Optional
+      authors: z.array(z.object({
+        name: z.string().trim().min(1).optional(),
+        href: z.string().trim().min(1).refine(isAuthorHref, {
+          message: '作者链接须为以 / 开头的本站路径或 HTTP(S) 地址'
+        }).optional()
+      })).optional(),
       updatedDate: z.coerce.date().optional(),
       heroImage: z
         .object({
