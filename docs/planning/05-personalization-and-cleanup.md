@@ -56,4 +56,5 @@ src/site.config.ts、About、本地布局和页面、主题 Header/Footer 与按
 - 浏览器图标改为 public/favicon/favicon.svg 的简洁 T 字母图形，BaseHead 不再输出旧主题 PNG/apple-touch-icon 声明；site.webmanifest 名称填写 ThRelic，图标指向新 SVG。旧主题静态图文件暂保留但不再被这些入口引用；独立品牌设计和专门的移动端安装图标以后再做。
 - 最后统一 npm run build 通过：75 文件零错误/警告/提示，56 页，原 Markdown 弃用提示保留；git diff --check 通过。核对首页与无封面文章不输出图片标签、有封面文章保留图片标签，SVG 图标链接与 manifest 正确；4322 预览实际打开新 SVG，T 字形显示正常。未实测外部社交平台抓取、浏览器旧图标缓存刷新或移动端安装。
 - 当前手动维护：站点语言/页脚在 site.config.ts；个人账号在 about/yanlite.astro 的 links；固定导航/页脚/目录/搜索文案在 components/site/；文章信息及许可展示在 components/article/；文章正文不因中文化而翻译。
+- 按后续配色需求，app.css 的浅色/深色两组主题变量改为蓝紫色：浅色强调色 248 52% 49%、深色强调色 246 85% 80%，同步调整背景、文字、柔和底色、边框及焦点色。文章封面的独立悬停配色仍由文章资料决定。
 - 下一任务为 06，本会话不启动。07 发布前需完成政策占位整合、实际评论服务决定、文章许可文字与链接一致性及适用的逐篇授权范围；这些仍是待办，不能把 05 收尾视为许可或正式政策已验收。
