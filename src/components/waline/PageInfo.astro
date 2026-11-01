@@ -13,6 +13,8 @@ const { comment, class: className, ...props } = Astro.props
 const path = Astro.url.pathname
 ---
 
+{/* 评论与统计共用全局开关，关闭时不生成统计容器。 */}
+{config.integ.waline.enable && (
 <div
   class={cn('text-base text-sm text-muted-foreground', className)}
   id='walinePageInfo'
@@ -32,6 +34,7 @@ const path = Astro.url.pathname
     )
   }
 </div>
+)}
 
 <script>
   import type { WalineAbort } from '@waline/client'
