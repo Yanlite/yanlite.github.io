@@ -1,5 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <title>ThRelic</title>
-  <rect width="64" height="64" rx="14" fill="#282235"/>
-  <path d="M15 14h34v9H37v29H27V23H15z" fill="#f4efff"/>
+  <defs>
+    <linearGradient id="background" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0f2fc"/>
+      <stop offset="1" stop-color="#dfe1f3"/>
+    </linearGradient>
+    <linearGradient id="fragment" x1="18" y1="18" x2="46" y2="49" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8597c7"/>
+      <stop offset="1" stop-color="#9384bd"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="20" fill="url(#background)"/>
+  <path d="M16 30c0-9 7-16 16-16h5c4 0 6 5 3 8L24 38c-3 3-8 1-8-3z" fill="url(#fragment)"/>
+  <path d="M48 34c0 9-7 16-16 16h-5c-4 0-6-5-3-8l16-16c3-3 8-1 8 3z" fill="url(#fragment)"/>
 </svg>

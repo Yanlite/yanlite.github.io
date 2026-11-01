@@ -29,6 +29,12 @@ export default defineConfig({
   trailingSlash: 'never',
   // root: './my-project-directory',
   server: { host: true },
+  vite: {
+    optimizeDeps: {
+      // 主题工具依赖虚拟配置，交给 Vite 插件处理，避免开发预打包解析失败。
+      exclude: ['astro-pure/utils']
+    }
+  },
   // https://docs.astro.build/en/guides/prefetch/
   prefetch: {
     // prefetchAll: true,
