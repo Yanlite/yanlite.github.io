@@ -4,7 +4,7 @@
   --primary: 255 37% 62.2%;
   /* Foreground */
   --foreground: 240 10% 3.9%;
-  --muted-foreground: 240 3.8% 28.1%;
+  --muted-foreground: 240 3.8% 22.1%;
   /* Background */
   --background: 230 33% 99%;
   --muted: 245 10% 94%;
@@ -21,7 +21,7 @@
   --primary: 245 90% 85%;
   /* Foreground */
   --foreground: 245 0.31% 92.2%;
-  --muted-foreground: 245 12% 75%;
+  --muted-foreground: 245 12% 80%;
   /* Background */
   --background: 245 25% 8%;
   --muted: 245 20% 15%;
@@ -39,24 +39,12 @@ html.dark {
   color-scheme: dark;
 }
 
-/* :root {
+/* 切换主题过渡时长。 */
+:root {
   --theme-transition-duration: 500ms;
-} */
+}
 
-/* 切换期间停掉组件自身的过渡，避免与整页淡化叠加。 */
-/* html.theme-snapshot,
-html.theme-snapshot *,
-html.theme-snapshot *::before,
-html.theme-snapshot *::after {
-  transition: none !important;
-} */
 
-/* 保留浏览器默认的整页交叉淡化，只调整速度。 */
-/* ::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: var(--theme-transition-duration);
-  animation-timing-function: ease-in-out;
-} */
 
 /* Global */
 a {
