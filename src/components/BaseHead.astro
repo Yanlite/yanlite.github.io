@@ -11,7 +11,9 @@ const { articleDate, description, ogImage, title } = Astro.props
 
 const siteTitle = `${title} ${config.titleDelimiter} ${config.title}`
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url).href
+// 没有图片时不输出图片元数据，避免把页面地址误当成图片地址。
+const socialImage = ogImage || config.socialCard
+const socialImageURL = socialImage ? new URL(socialImage, Astro.url).href : undefined
 ---
 
 <meta charset='utf-8' />
@@ -25,9 +27,6 @@ const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url)
 {/* Icons / Favicon */}
 <link rel='icon' type={config.favicon.type} href={config.favicon.href} />
 <link rel='shortcut icon' type={config.favicon.type} href={config.favicon.href} />
-<link rel='icon' type='image/png' sizes='32x32' href='/favicon/favicon-32x32.png' />
-<link rel='icon' type='image/png' sizes='16x16' href='/favicon/favicon-16x16.png' />
-<link rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-touch-icon.png' />
 <link rel='manifest' href='/favicon/site.webmanifest' />
 
 {/* Font preloads */}
@@ -57,9 +56,7 @@ const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url)
 <meta content={canonicalURL} property='og:url' />
 <meta content={config.title} property='og:site_name' />
 <meta content={config.locale.attrs} property='og:locale' />
-<meta content={socialImageURL} property='og:image' />
-<meta content='1200' property='og:image:width' />
-<meta content='630' property='og:image:height' />
+{socialImageURL && <meta content={socialImageURL} property='og:image' />}
 {
   articleDate && (
     <>
@@ -70,11 +67,11 @@ const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url)
 }
 
 {/* Twitter */}
-<meta content='summary_large_image' property='twitter:card' />
+<meta content={socialImageURL ? 'summary_large_image' : 'summary'} property='twitter:card' />
 <meta content={canonicalURL} property='twitter:url' />
 <meta content={title} property='twitter:title' />
 <meta content={description} property='twitter:description' />
-<meta content={socialImageURL} property='twitter:image' />
+{socialImageURL && <meta content={socialImageURL} property='twitter:image' />}
 
 {/* Sitemap */}
 <link href='/sitemap-index.xml' rel='sitemap' />

@@ -10,9 +10,9 @@ export const theme: ThemeUserConfig = {
   /** Description metadata for your website. Can be used in page metadata. */
   description: 'Thoughts and relics for wandering souls.',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
-  favicon: '/favicon/favicon.ico',
-  /** The default social card image for your site which should be a path to an image in the `public/` directory. */
-  socialCard: '/images/social-card.png',
+  favicon: '/favicon/favicon.svg',
+  // 留空表示不设置默认分享图；文章仍可使用自己的封面。
+  socialCard: '',
   /** Specify the default language for this site. */
   locale: {
     lang: 'zh-CN',
@@ -62,25 +62,19 @@ export const theme: ThemeUserConfig = {
     // Year format
     year: `© ${new Date().getFullYear()}`,
     // year: `© 2019 - ${new Date().getFullYear()}`,
-    links: [
-      // Registration link
-      {
-        title: 'Moe ICP ?',
-        link: 'https://icp.gov.moe/?keyword=?',
-        style: 'text-sm' // Uno/TW CSS class
-      },
-      // Privacy Policy link
-      {
-        title: '站点政策',
-        link: '/terms',
-        pos: 2 // position set to 2 will be appended to copyright line
-      }
-    ],
+    // links: [
+    //   // 站点政策入口暂隐藏，后续按实际服务配置整合说明。
+    //   {
+    //     title: '站点政策',
+    //     link: '/terms',
+    //     pos: 2 // position set to 2 will be appended to copyright line
+    //   }
+    // ],
     /** Enable displaying a “Astro & Pure theme powered” link in your site’s footer. */
     credits: true,
     /** Optional details about the social media accounts for this site. */
     social: [
-      { icon: 'github', label: 'GitHub', href: 'https://github.com/cworld1/astro-theme-pure' },
+      { icon: 'github', label: '本站源码', href: 'https://github.com/Yanlite/yanlite.github.io' },
       { icon: 'rss', label: 'RSS 订阅', href: '/rss.xml' }
     ]
   },
